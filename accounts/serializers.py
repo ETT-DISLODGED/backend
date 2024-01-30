@@ -95,3 +95,31 @@ class LoginSerializer(serializers.ModelSerializer):
         }
 
         return data
+    
+
+class UserSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields=['id', 'username','nickname', 'email', 'gender', 'age']
+
+    gender_list = (
+        ('남', '남'),
+        ('여', '여')
+    )
+
+    username = serializers.CharField(max_length=20) # 아이디
+    email = serializers.EmailField()
+    nickname = serializers.CharField(max_length=20) # 이름
+    gender = serializers.ChoiceField(
+        choices=gender_list
+    )
+    age = serializers.IntegerField()
+
+class PasswordUpdateSerializer(serializers.Serializer):
+    current_password = serializers.CharField(max_length=128, write_only=True)
+    new_password = serializers.CharField(max_length=128, write_only=True)
+    
+
+
+    

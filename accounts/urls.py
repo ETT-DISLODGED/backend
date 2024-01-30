@@ -11,6 +11,8 @@ urlpatterns = [
     path('signup/', SignupView.as_view()),
     path('login/', LoginView.as_view()),
     path('logout/', LogoutView.as_view()),
+    path('update/', UserUpdateView.as_view()),
+    path('password/', PasswordUpdateView.as_view()),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/token/', TokenRefreshView.as_view(), name='token_refresh'),
