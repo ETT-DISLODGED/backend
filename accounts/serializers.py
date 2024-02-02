@@ -28,7 +28,7 @@ class SignUpSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=20) # 아이디
     password = serializers.CharField()
     email = serializers.EmailField()
-    nickname = serializers.CharField(max_length=20) # 이름
+    nickname = serializers.CharField(max_length=8) # 이름
     gender = serializers.ChoiceField(
         choices=gender_list
     )
@@ -67,7 +67,7 @@ class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=20) # 아이디
     password = serializers.CharField()
     email = serializers.EmailField()
-    nickname = serializers.CharField(max_length=20) # 이름
+    nickname = serializers.CharField(max_length=8) # 이름
     gender = serializers.ChoiceField(
         choices=gender_list
     )
@@ -110,7 +110,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(max_length=20) # 아이디
     email = serializers.EmailField()
-    nickname = serializers.CharField(max_length=20) # 이름
+    nickname = serializers.CharField(max_length=8) # 이름
     gender = serializers.ChoiceField(
         choices=gender_list
     )
