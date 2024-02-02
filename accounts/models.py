@@ -16,7 +16,7 @@ class User(AbstractUser):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(max_length=20, unique=True) 
-    nickname = models.CharField(max_length=20)
+    nickname = models.CharField(max_length=8)
     email = models.EmailField(unique=True)
     gender = models.CharField(max_length=2, choices=gender_list, default='여')
     age = models.IntegerField(validators=[MinValueValidator(10), MaxValueValidator(80)])
