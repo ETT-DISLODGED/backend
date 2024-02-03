@@ -1,5 +1,5 @@
 from .serializers import *
-from .permissions import AuthenticatedOnly
+from .permissions import AuthenticatedOnly, IsAuthor
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework import viewsets, filters
@@ -17,3 +17,12 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author = self.request.user)
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset=Comment.objects.all()
+    serializer_class=CommentSerializer
+
+    permission_classes = [IsAuthenticated, IsAuthor]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)

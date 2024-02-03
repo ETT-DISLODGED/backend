@@ -8,6 +8,7 @@ app_name = 'posts'
 router = DefaultRouter()
 
 router.register('post', PostViewSet) #comment list볼러면 설정해줘야함..
+router.register('comment',CommentViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
