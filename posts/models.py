@@ -26,7 +26,7 @@ class Post(models.Model):
     level=models.IntegerField(choices=level_list) # 심각도
     title = models.CharField(max_length=20)
     tag = models.CharField(max_length=8)
-    group = models.CharField(choices=group_list) # 게시판 유형
+    group = models.CharField(max_length=16, choices=group_list) # 게시판 유형
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
