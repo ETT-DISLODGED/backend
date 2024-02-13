@@ -10,6 +10,9 @@ from rest_framework.status import *
 from rest_framework.permissions import AllowAny
 from rest_framework.generics import UpdateAPIView
 
+from posts.models import *
+from posts.serializers import *
+
 
 # Create your views here.
 
@@ -123,3 +126,21 @@ class PasswordUpdateView(APIView):
             return Response({'message': '비밀번호가 성공적으로 변경되었습니다.'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': '데이터를 바르게 입력해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class MyPostView(APIView):
+
+    def get(self, request):
+
+        myPosts = Post.objects.filter(author=request.user).order_by('-created_at')
+        
+        myPosts_serializers = [PostSerializer(post).data for post in myPosts]
+
+        total_posts = Post.objects.filter(author=request.user).count()
+
+        response_data = {
+            'total': total_posts,
+            '내가 작성한 게시물': myPosts_serializers,
+        }
+
+        return Response(response_data)
