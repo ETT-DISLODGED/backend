@@ -10,8 +10,8 @@ import uuid
 class User(AbstractUser):
 
     gender_list = (
-        ('여', '여'),
-        ('남', '남')
+        ('남', '남'),
+        ('여', '여')
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

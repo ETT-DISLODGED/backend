@@ -10,6 +10,15 @@ from rest_framework.status import *
 from rest_framework.permissions import AllowAny
 from rest_framework.generics import UpdateAPIView
 
+from posts.models import *
+from posts.serializers import *
+from rest_framework.pagination import PageNumberPagination
+from .pagination import PaginationHandlerMixin
+
+# pagination을 위한 함수
+class MypagePagination(PageNumberPagination):
+    page_size = 6
+
 
 # Create your views here.
 
@@ -123,3 +132,30 @@ class PasswordUpdateView(APIView):
             return Response({'message': '비밀번호가 성공적으로 변경되었습니다.'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': '데이터를 바르게 입력해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class MyPostView(APIView, PaginationHandlerMixin): # 내가 작성한 게시글 가져오기
+    pagination_class = MypagePagination
+
+    def get(self, request):
+        # page_number = self.request.query_params.get('page', 1)
+
+        myPosts = Post.objects.filter(author=request.user).order_by('-created_at')
+        myPosts = self.paginate_queryset(myPosts)
+        myPosts_serializers = [PostSerializer(post).data for post in myPosts]
+
+        #total_posts = Post.objects.filter(author=request.user).count()
+
+        total_posts = Post.objects.filter(author=request.user).count()
+        total_pages = self.paginator.page.paginator.num_pages if self.paginator else 0
+        current_page = self.paginator.page.number if self.paginator and self.paginator.page else 1
+
+
+        response_data = {
+            'total': total_posts,
+            'total_page': total_pages,
+            'current_page': current_page,
+            '내가 작성한 게시물': myPosts_serializers,
+        }
+
+        return Response(response_data)
