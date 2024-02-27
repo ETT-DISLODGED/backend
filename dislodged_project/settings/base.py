@@ -51,10 +51,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', #cors 보안
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    "corsheaders.middleware.CorsMiddleware", #cors 보안
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -63,7 +63,7 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_ALLOW_ALL = True # 모든 도메인 허용
 CORS_ALLOW_CREDENTIALS = True # 쿠키 허용
-
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'dislodged_project.urls'
 
