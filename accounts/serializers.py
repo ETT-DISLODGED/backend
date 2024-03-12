@@ -125,13 +125,13 @@ class VoiceInfoSerializer(serializers.ModelSerializer):
     user_id = serializers.ReadOnlyField(source='user.id')
     user = serializers.ReadOnlyField(source='user.nickname')
 
-    class Meta:
-        model = Voice_Info
-        fields=['id', 'user_id', 'user', 'speed', 'pitch', 'type']
-
     speed = serializers.FloatField()
     pitch = serializers.FloatField()
     type = serializers.CharField()
+
+    class Meta:
+        model = Voice_Info
+        fields=['id', 'user_id', 'user', 'speed', 'pitch', 'type']
 
 
 
