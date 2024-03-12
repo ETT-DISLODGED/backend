@@ -19,4 +19,6 @@ urlpatterns = [
 
     path('mypost/', MyPostView.as_view()),
 
+    path('myvoice/',VoiceInfoView.as_view()),
+
 ]

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Voice_Info
 
 # class SignUpSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -120,6 +120,19 @@ class PasswordUpdateSerializer(serializers.Serializer):
     current_password = serializers.CharField(max_length=128, write_only=True)
     new_password = serializers.CharField(max_length=128, write_only=True)
     
+
+class VoiceInfoSerializer(serializers.ModelSerializer):
+    user_id = serializers.ReadOnlyField(source='user.id')
+    user = serializers.ReadOnlyField(source='user.nickname')
+
+    class Meta:
+        model = Voice_Info
+        fields=['id', 'user_id', 'user', 'speed', 'pitch', 'type']
+
+    speed = serializers.FloatField()
+    pitch = serializers.FloatField()
+    type = serializers.CharField()
+
 
 
     

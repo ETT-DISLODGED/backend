@@ -15,6 +15,10 @@ from posts.serializers import *
 from rest_framework.pagination import PageNumberPagination
 from .pagination import PaginationHandlerMixin
 
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwner
+
 # pagination을 위한 함수
 class MypagePagination(PageNumberPagination):
     page_size = 6
@@ -159,3 +163,26 @@ class MyPostView(APIView, PaginationHandlerMixin): # 내가 작성한 게시글 
         }
 
         return Response(response_data)
+    
+
+# Voice_Info 정보 조회/수정 함수
+class VoiceInfoView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    
+
+    def get(self,request):
+        userID=request.user.id
+        voice = get_object_or_404(Voice_Info,user_id=userID)
+        serializer = VoiceInfoSerializer(voice,context={'request': request})
+        
+        return Response({'message':'Voice Info 조회 성공','data':serializer.data},status=status.HTTP_200_OK)
+
+    def put(self, request, format=None):
+        userID=request.user.id
+        voice = get_object_or_404(Voice_Info,user_id=userID)
+        serializer = VoiceInfoSerializer(voice, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'voice 정보 수정 성공', 'data': serializer.data}, status=HTTP_200_OK)
+        return Response({'message': 'voice 정보 수정 실패', 'data': serializer.errors}, status=HTTP_400_BAD_REQUEST)
+
