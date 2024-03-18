@@ -172,3 +172,6 @@ cython_debug/
 .idea/
 
 # End of https://www.toptal.com/developers/gitignore/api/django
+
+# tts json 파일도 혹시 몰라 추가
+dislodged-tts-project-11e592a89e01.json

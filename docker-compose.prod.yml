@@ -9,6 +9,7 @@ services:
     command: gunicorn dislodged_project.wsgi:application --bind 0.0.0.0:8000
     environment:
       DJANGO_SETTINGS_MODULE: dislodged_project.settings.prod
+      GOOGLE_APPLICATION_CREDENTIALS: dislodged-tts-project-11e592a89e01.json
     env_file:
       - .env
     expose:
