@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import environ
 
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='../../../dislodged-tts-project-11e592a89e01.json' # tts를 위한..경로 지정 이건 local에서만 사용
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 env = environ.Env(

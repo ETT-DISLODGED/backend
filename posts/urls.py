@@ -12,5 +12,6 @@ router.register('comment',CommentViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('tts/', TextToSpeechAPIView.as_view(), name='text_to_speech'),
 
 ]
