@@ -10,7 +10,7 @@ RUN apk add --no-cache mariadb-connector-c-dev
 RUN pip3 install --upgrade pip
 RUN pip3 install --upgrade setuptools
 
-RUN apk add build-base linux-headers 
+# RUN apk add build-base linux-headers 
 RUN apk add g++
 
 RUN apk update && apk add python3 python3-dev mariadb-dev build-base && pip3 install mysqlclient && apk del python3-dev mariadb-dev build-base
@@ -22,7 +22,7 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
 # tts .json file
-COPY dislodged-tts-project-11e592a89e01.json /app/dislodged-tts-project-11e592a89e01.json
+# COPY dislodged-tts-project-11e592a89e01.json /app/dislodged-tts-project-11e592a89e01.json
 
 # Now copy in our code, and run it
 COPY . /app/
