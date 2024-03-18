@@ -9,7 +9,7 @@ services:
     command: gunicorn dislodged_project.wsgi:application --bind 0.0.0.0:8000
     environment:
       DJANGO_SETTINGS_MODULE: dislodged_project.settings.prod
-      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_SERVICES_JSON }}
+      GOOGLE_APPLICATION_CREDENTIALS: secrets.json
     env_file:
       - .env
     expose:
