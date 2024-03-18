@@ -14,9 +14,11 @@ urlpatterns = [
     path('update/', UserUpdateView.as_view()),
     path('password/', PasswordUpdateView.as_view()),
 
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('refresh/token/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # username&password -> accesss
+    path('refresh/token/', TokenRefreshView.as_view(), name='token_refresh'), # refresh -> access
 
     path('mypost/', MyPostView.as_view()),
+
+    path('myvoice/',VoiceInfoView.as_view()),
 
 ]

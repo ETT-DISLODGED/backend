@@ -24,5 +24,17 @@ class User(AbstractUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['password', 'nickname', 'email', 'gender', 'age']
 
+    
+
     def __str__(self):
         return f'{self.username}'
+    
+    
+class Voice_Info(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    speed = models.FloatField(null=True, blank=True)
+    pitch = models.FloatField(null=True, blank=True)
+    type = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.user} voice_info'
