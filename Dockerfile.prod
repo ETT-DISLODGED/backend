@@ -12,6 +12,15 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+# grpcio 설치를 위한...
+RUN pip3 install --upgrade pip
+RUN pip3 install --upgrade setuptools
+
+RUN apk add g++
+
+# tts .json file
+# COPY dislodged-tts-project-11e592a89e01.json /app/dislodged-tts-project-11e592a89e01.json
+
 # install psycopg2 dependencies
 RUN apk update && apk add python3 python3-dev mariadb-dev build-base && pip3 install mysqlclient
 
