@@ -27,8 +27,15 @@ jobs:
         key: ${{ secrets.KEY }}
         script: mkdir -p /home/ubuntu/srv/ubuntu
 
+    - name: create-json file
+      id: create-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "secrets.json"
+        json: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
     - name: copy source via ssh key
-      uses: burnett01/rsync-deployments@4.1
+      uses: burnett01/rsync-deployments@4.1 
       with:
         switches: -avzr --delete
         remote_path: /home/ubuntu/srv/ubuntu/
