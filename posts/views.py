@@ -48,8 +48,8 @@ class TextToSpeechAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
         text = request.query_params.get('text', None)
-        speed = int(request.query_params.get('speed', None))
-        pitch = int(request.query_params.get('pitch', None))
+        speed = float(request.query_params.get('speed', None))
+        pitch = float(request.query_params.get('pitch', None))
         type = request.query_params.get('type', None)
 
         if not text:
