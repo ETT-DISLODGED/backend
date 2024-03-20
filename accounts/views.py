@@ -21,7 +21,7 @@ from .permissions import IsOwner
 
 # pagination을 위한 함수
 class MypagePagination(PageNumberPagination):
-    page_size = 6
+    page_size = 4
 
 
 # Create your views here.
