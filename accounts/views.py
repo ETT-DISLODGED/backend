@@ -159,7 +159,7 @@ class MyPostView(APIView, PaginationHandlerMixin): # 내가 작성한 게시글 
             'total': total_posts,
             'total_page': total_pages,
             'current_page': current_page,
-            '내가 작성한 게시물': myPosts_serializers,
+            'results': myPosts_serializers,
         }
 
         return Response(response_data)
