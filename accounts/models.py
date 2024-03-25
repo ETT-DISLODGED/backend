@@ -32,9 +32,9 @@ class User(AbstractUser):
     
 class Voice_Info(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    speed = models.FloatField(null=True, blank=True)
-    pitch = models.FloatField(null=True, blank=True)
-    type = models.TextField(null=True, blank=True)
+    speed = models.FloatField(default=0)
+    pitch = models.FloatField(default=1)
+    type = models.TextField(default="ko-KR-Wavenet-A")
 
     def __str__(self):
         return f'{self.user} voice_info'
