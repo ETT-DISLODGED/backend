@@ -34,7 +34,7 @@ class Voice_Info(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     speed = models.FloatField(default=0)
     pitch = models.FloatField(default=1)
-    type = models.TextField(default="ko-KR-Wavenet-A")
+    type = models.TextField(default="ko-KR-Standard-A")
 
     def __str__(self):
         return f'{self.user} voice_info'
