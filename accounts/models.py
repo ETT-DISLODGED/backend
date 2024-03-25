@@ -32,9 +32,9 @@ class User(AbstractUser):
     
 class Voice_Info(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    speed = models.FloatField(default=0)
-    pitch = models.FloatField(default=1)
-    type = models.CharField(max_length=100, default="ko-KR-Standard-A") # textfield는 default 지정이 안됨.
+    speed = models.FloatField(default=1)
+    pitch = models.FloatField(default=0)
+    type = models.CharField(max_length=100, default="ko-KR-Standard-A") # textfield는 default 지정이 안됨. 게다가 Django 3.2.4 이상이어야 함...
 
     def __str__(self):
         return f'{self.user} voice_info'
