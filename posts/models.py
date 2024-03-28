@@ -20,6 +20,18 @@ class Post(models.Model):
         ('가족/친구', '가족/친구'),
         ('기타', '기타')
     ]
+    image_list = [ # (DB에 저장되는 값, 사용자에게 보여지는 값)
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL1.jpeg', 1),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL2.jpeg', 2),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL3.jpeg', 3),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL4.jpeg', 4),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL5.jpeg', 5),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL6.jpeg', 6),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL7.jpeg', 7),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL8.jpeg', 8),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL9.jpeg', 9)
+
+    ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     author = models.ForeignKey(User, null=True, on_delete=models.CASCADE)  # 게시글 작성자
@@ -30,6 +42,7 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    image = models.CharField(max_length=128, choices=image_list, default = 'https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL1.jpeg') # 이미지 객체 URL
 
     def __str__(self):
         return f'[{self.id}]{self.title} :: {self.author}'

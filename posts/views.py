@@ -26,7 +26,23 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
     def perform_create(self, serializer):
-        serializer.save(author = self.request.user)
+        # 이미지 저장을 위한 것
+        image_list = [ # (DB에 저장되는 값, 사용자에게 보여지는 값)
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL1.jpeg', 1),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL2.jpeg', 2),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL3.jpeg', 3),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL4.jpeg', 4),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL5.jpeg', 5),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL6.jpeg', 6),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL7.jpeg', 7),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL8.jpeg', 8),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/dislodged_image/DL9.jpeg', 9)
+
+    ]
+        total_posts = (Post.objects.filter(author=self.request.user).count())%9
+        image_url = image_list[total_posts][0]
+
+        serializer.save(author = self.request.user, image=image_url)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset=Comment.objects.all()
