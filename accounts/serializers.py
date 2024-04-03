@@ -36,8 +36,10 @@ class SignUpSerializer(serializers.Serializer):
 
     def create(self, validated_data):
 
-        if User.objects.filter(username=validated_data['username']).exists() or User.objects.filter(email=validated_data['email']).exists():
-            raise serializers.ValidationError('username 존재 or email 존재')
+        if User.objects.filter(username=validated_data['username']).exists():
+            raise serializers.ValidationError('username 존재')
+        elif User.objects.filter(email=validated_data['email']).exists():
+            raise serializers.ValidationError('email 존재')
 
 
         else:
