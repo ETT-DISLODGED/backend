@@ -50,6 +50,8 @@ INSTALLED_APPS = [
 
     "accounts",
     "posts",
+
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
