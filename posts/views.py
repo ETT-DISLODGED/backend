@@ -53,7 +53,9 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsAuthor]
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(author=self.request.user, author_voice=self.request.user.user_voice)
+
+
 
 
 # tts 코드

@@ -3,10 +3,16 @@ from .models import *
 
 class CommentSerializer(serializers.ModelSerializer):
     author_id = serializers.ReadOnlyField(source='author.id')
-    author = serializers.ReadOnlyField(source = 'author.nickname')
+    author_nickname = serializers.ReadOnlyField(source = 'author.nickname')
+    author_username = serializers.ReadOnlyField(source='author.username') # username (아이디)추가
+    voice_speed = serializers.ReadOnlyField(source='author_voice.speed') # 댓글 작성자 voice 정보들 가져오기. voice_info가 바뀌면 이것도 바뀐다.
+    voice_pitch = serializers.ReadOnlyField(source='author_voice.pitch')
+    voice_type = serializers.ReadOnlyField(source='author_voice.type')
+
     class Meta:
         model=Comment
-        fields=['id','author_id', 'author','post','content','created_at','updated_at']
+        fields=['id','author_id', 'author_nickname','author_username','voice_speed','voice_pitch','voice_type','post','content','created_at','updated_at']
+
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -27,12 +33,13 @@ class PostSerializer(serializers.ModelSerializer):
     # ]
 
     author_id = serializers.ReadOnlyField(source='author.id')
-    author = serializers.ReadOnlyField(source='author.nickname')
+    author_nickname = serializers.ReadOnlyField(source='author.nickname') #
     comment = CommentSerializer(many=True, source='comments', read_only=True) #source=model의 related_name 명시해야 보임
+    
     
     image_url = serializers.ReadOnlyField(source='image') # 이미지
 
     class Meta:
         model = Post
-        fields = ['id', 'author_id', 'author','image_url','level','title','tag','group','content','created_at','updated_at','comment']
+        fields = ['id', 'author_id', 'author_nickname','image_url','level','title','tag','group','content','created_at','updated_at','comment']
 

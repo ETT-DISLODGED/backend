@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import User
+from accounts.models import User, Voice_Info
 import uuid
 
 # Create your models here.
@@ -53,6 +53,7 @@ class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     post=models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author_voice = models.ForeignKey(Voice_Info, on_delete=models.CASCADE, null=True) # 댓글 작성자의 Voice_Info
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
