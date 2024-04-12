@@ -13,5 +13,6 @@ router.register('comment',CommentViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('tts/', TextToSpeechAPIView.as_view(), name='text_to_speech'),
+    path('Mp3File/<uuid:post_pk>/',Mp3Upload.as_view(), name="All_TTS_MP3")
 
 ]
