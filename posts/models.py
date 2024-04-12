@@ -37,7 +37,6 @@ class Post(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     author = models.ForeignKey(User, null=True, on_delete=models.CASCADE)  # 게시글 작성자
-    level=models.IntegerField(choices=level_list) # 심각도
     title = models.CharField(max_length=20)
     tag = models.CharField(max_length=8)
     group = models.CharField(max_length=16, choices=group_list) # 게시판 유형
