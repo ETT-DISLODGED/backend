@@ -84,6 +84,60 @@ class Mp3Upload(APIView):
 
         if len(comment_list)==0:
             return Response({"RESULT": "변환할 댓글이 없습니다."}, status=400)
+        
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=ACCESS_KEY_ID,
+            aws_secret_access_key=SECRET_ACCESS_KEY
+        )
+        
+        mp3_list = s3_client.list_objects(Bucket=AWS_STORAGE_BUCKET_NAME, Prefix="mp3/"+str(post_pk)+"/") # s3 버켓 가져와서
+        content_list = mp3_list['Contents'] # contents 가져오기! 
+        file_list = []
+        for content in content_list:
+            key = content['Key'] # Key값(파일명)만 뽑기
+            file_list.append(key)
+
+
+        for i in range(len(file_list), len(comment_list)):
+            client = texttospeech.TextToSpeechClient()
+            synthesis_input = texttospeech.SynthesisInput(text=comment_list[i].get('content'))
+            voice = texttospeech.VoiceSelectionParams(
+                language_code="ko-KR", name=comment_list[i].get('type')
+            )
+            audio_config = texttospeech.AudioConfig(
+                audio_encoding=texttospeech.AudioEncoding.MP3,
+                pitch=comment_list[i].get('pitch'), 
+                speaking_rate=comment_list[i].get('speed') 
+            )
+
+            response = client.synthesize_speech(
+                input=synthesis_input,
+                voice=voice,
+                audio_config=audio_config
+            )
+            s3_client = boto3.client(
+                's3',
+                aws_access_key_id=ACCESS_KEY_ID,
+                aws_secret_access_key=SECRET_ACCESS_KEY
+            )
+
+            s3_client.put_object(Body=response.audio_content, Bucket=AWS_STORAGE_BUCKET_NAME, Key="mp3/"+str(post_pk)+"/"+str(i)+".mp3")
+
+
+        return Response({"RESULT": comment_list, "반영된 댓글수": len(comment_list)-len(file_list)}, status=200)
+    
+    def put(self, request, post_pk, format=None):
+        comments = Comment.objects.filter(post_id=post_pk).order_by('created_at') # 게시글 댓글 가져오고 오래된 순으로
+
+        comment_list = [{
+            "comment_id": comment.id,
+            "speed": comment.author_voice.speed,
+            "pitch": comment.author_voice.pitch,
+            "type": comment.author_voice.type,
+            "content": comment.content
+        } for comment in comments]
+        
 
         for i in range(len(comment_list)):
             client = texttospeech.TextToSpeechClient()
@@ -122,16 +176,17 @@ class Mp3Upload(APIView):
             aws_secret_access_key=SECRET_ACCESS_KEY
         )
 
-        mp3_list = s3_client.list_objects(Bucket=AWS_STORAGE_BUCKET_NAME) # s3 버켓 가져와서
+        mp3_list = s3_client.list_objects(Bucket=AWS_STORAGE_BUCKET_NAME, Prefix="mp3/"+str(post_pk)+"/") # s3 버켓 가져와서
         content_list = mp3_list['Contents'] # contents 가져오기! 
         file_list = []
         for content in content_list:
             key = content['Key'] # Key값(파일명)만 뽑기
             file_list.append(key)
+        # print(len(file_list)-len(comments))
 
         if len(comments)==0:
             return Response({"RESULT": "댓글을 달아주세요!"}, status=400)
-        elif str(post_pk) not in ''.join(file_list):
+        elif str(post_pk) not in ''.join(file_list): # 변환하지 않은 댓글이 있다면
             return Response({"RESULT": "음성 변환을 먼저 해주세요!"}, status=400)
         
         
