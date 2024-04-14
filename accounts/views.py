@@ -19,6 +19,8 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwner
 
+from posts.serializers import *
+
 # pagination을 위한 함수
 class MypagePagination(PageNumberPagination):
     page_size = 4
@@ -105,8 +107,10 @@ class UserUpdateView(UpdateAPIView):
         serializer = UserSerializer(request.user, data=request.data, partial=True)
         
         if serializer.is_valid():
-            if User.objects.filter(username=request.POST.get('username')).exists() or User.objects.filter(email=request.POST.get('email')).exists():
-                return Response({'message': 'username or email 존재'}, status=status.HTTP_400_BAD_REQUEST)
+            if User.objects.filter(username=request.POST.get('username')).exists():
+                return Response({'message': '동일한 ID가 존재합니다.'}, status=status.HTTP_400_BAD_REQUEST)
+            elif User.objects.filter(email=request.POST.get('email')).exists():
+                return Response({'message': '동일한 email이 존재합니다.'}, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
             return Response({'message': '유저 변경 성공.', 'data': serializer.validated_data}, status=status.HTTP_200_OK)
         return Response({'message': '유저 변경 실패.', 'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -185,4 +189,39 @@ class VoiceInfoView(APIView):
             serializer.save()
             return Response({'message': 'voice 정보 수정 성공', 'data': serializer.data}, status=HTTP_200_OK)
         return Response({'message': 'voice 정보 수정 실패', 'data': serializer.errors}, status=HTTP_400_BAD_REQUEST)
+
+from collections import Counter
+# 좋아요한 댓글 목록
+class LikedListView(APIView, PaginationHandlerMixin):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        comments = Comment.objects.filter(like=user.id)
+        voice_speed = 0
+        voice_pitch = 0
+        arr=[] # comment voice type 최빈값 찾기 위한 임시 배열
+        comment_list=[]
+        for comment in comments:
+            comment_list.append({
+            "comment_id": comment.id,
+            "speed": comment.author_voice.speed,
+            "pitch": comment.author_voice.pitch,
+            "type": comment.author_voice.type,
+            "content": comment.content
+            })
+            voice_speed += comment.author_voice.speed
+            voice_pitch += comment.author_voice.pitch
+            arr.append(comment.author_voice.type)
+            comment.is_liked=True
+        print(len(comment_list), comment_list)
+        print(voice_speed, voice_pitch, Counter(arr).most_common(1)[0][0])
+
+        serializer = self.serializer_class(comments, many=True)
+
+        return Response({'message': '좋아요한 댓글 목록', 'data': serializer.data, 
+                         'speed_avg':voice_speed/len(comment_list), 'pitch_avg': voice_pitch/len(comment_list),
+                         'type_avg':Counter(arr).most_common(1)[0][0]}, status=HTTP_200_OK)
 

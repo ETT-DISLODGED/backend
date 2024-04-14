@@ -9,9 +9,11 @@ class CommentSerializer(serializers.ModelSerializer):
     voice_pitch = serializers.ReadOnlyField(source='author_voice.pitch')
     voice_type = serializers.ReadOnlyField(source='author_voice.type')
 
+    is_liked = serializers.BooleanField(default=False)
+
     class Meta:
         model=Comment
-        fields=['id','author_id', 'author_nickname','author_username','voice_speed','voice_pitch','voice_type','post','content','created_at','updated_at']
+        fields=['id','author_id', 'author_nickname','author_username','voice_speed','voice_pitch','voice_type','post','content','created_at','updated_at', 'is_liked']
 
 
 
