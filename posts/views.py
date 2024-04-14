@@ -3,6 +3,7 @@ from .permissions import AuthenticatedOnly, IsAuthor
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, filters
 from rest_framework.pagination import PageNumberPagination
@@ -53,6 +54,28 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class=CommentSerializer
 
     permission_classes = [IsAuthenticated, IsAuthor]
+
+    def list(self, request, *args, **kwargs):
+        comments = Comment.objects.all().order_by('-created_at')
+        comments = self.filter_queryset(comments)
+
+        if request.user:
+            for comment in comments:
+                if comment.like.filter(pk=request.user.id).exists():
+                    comment.is_liked=True
+        serializer = self.serializer_class(comments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def retrieve(self, request, pk):
+        user = request.user
+        queryset = Comment.objects.all()
+        comment = get_object_or_404(queryset, pk=pk)
+
+        if comment.like.filter(pk=user.id).exists():
+            comment.is_liked=True
+
+        serializer = self.serializer_class(comment)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user, author_voice=self.request.user.user_voice)
@@ -232,4 +255,36 @@ class TextToSpeechAPIView(APIView):
     
 # 음성 파일을 HttpResponse 객체로 반환
         return HttpResponse(response.audio_content, content_type="audio/wav")
+
+# 댓글 좋아요 기능
+class CommentLikeView(APIView):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        user = request.user
+        comment = get_object_or_404(Comment, pk=pk)
+        comment.like.add(user)
+        # comment.is_liked=True
+
+        serializer = self.serializer_class(data=request.data, instance=comment, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': '좋아요 성공', 'data': {'comment': serializer.data['id']}}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': '좋아요 실패', 'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
+    def delete(self, request, pk):
+        user = request.user
+        comment= get_object_or_404(Comment, pk=pk)
+        comment.like.remove(user)
+        # comment.is_liked=False
+
+        serializer = self.serializer_class(data=request.data, instance=comment, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': '좋아요 취소 성공', 'data': {'comment': serializer.data['id']}}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': '좋아요 취소 실패', 'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

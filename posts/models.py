@@ -57,5 +57,14 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    like=models.ManyToManyField(User, related_name='comment_like', blank=True)
+
     def __str__(self):
         return f'[{self.id}]{self.post.title} :: {self.author}'
+    
+# class CommentLike(models.Model):
+#     user = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
+#     comment = models.ForeignKey(Comment, related_name='comment', on_delete=models.CASCADE)
+
+#     def __str__(self):
+#         return f'{self.user.nickname} - {self.comment.id}'
