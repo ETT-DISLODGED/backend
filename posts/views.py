@@ -76,9 +76,17 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         serializer = self.serializer_class(comment)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data = request.data, partial=True)
+        if serializer.is_valid():
+            serializer.is_liked=True
+            serializer.save(author=self.request.user, author_voice=self.request.user.user_voice)
+            return Response(serializer.data)
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user, author_voice=self.request.user.user_voice)
+    # def perform_create(self, serializer):
+    #     serializer.is_liked=True
+    #     serializer.save(author=self.request.user, author_voice=self.request.user.user_voice)
 
 
 
@@ -151,7 +159,7 @@ class Mp3Upload(APIView):
 
         return Response({"RESULT": comment_list, "반영된 댓글수": len(comment_list)-len(file_list)+1}, status=200)
     
-    def put(self, request, post_pk, format=None):
+    def put(self, request, post_pk, format=None): # 이건 몰래 넣은거 0.<<
         comments = Comment.objects.filter(post_id=post_pk).order_by('created_at') # 게시글 댓글 가져오고 오래된 순으로
 
         comment_list = [{
