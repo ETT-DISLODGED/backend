@@ -19,6 +19,8 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwner
 
+from posts.serializers import *
+
 # pagination을 위한 함수
 class MypagePagination(PageNumberPagination):
     page_size = 4
@@ -185,4 +187,29 @@ class VoiceInfoView(APIView):
             serializer.save()
             return Response({'message': 'voice 정보 수정 성공', 'data': serializer.data}, status=HTTP_200_OK)
         return Response({'message': 'voice 정보 수정 실패', 'data': serializer.errors}, status=HTTP_400_BAD_REQUEST)
+
+# 좋아요한 댓글 목록
+class LikedListView(APIView, PaginationHandlerMixin):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        comments = Comment.objects.filter(like=user.id)
+        comment_list=[]
+        for comment in comments:
+            comment_list.append({
+            "comment_id": comment.id,
+            "speed": comment.author_voice.speed,
+            "pitch": comment.author_voice.pitch,
+            "type": comment.author_voice.type,
+            "content": comment.content
+            })
+            comment.is_liked=True
+        print(comment_list)
+
+        serializer = self.serializer_class(comments, many=True)
+
+        return Response({'message': '좋아요한 댓글 목록', 'data': serializer.data}, status=HTTP_200_OK)
 
