@@ -216,12 +216,12 @@ class LikedListView(APIView, PaginationHandlerMixin):
             voice_pitch += comment.author_voice.pitch
             arr.append(comment.author_voice.type)
             comment.is_liked=True
-        print(len(comment_list), comment_list)
-        print(voice_speed, voice_pitch, Counter(arr).most_common(1)[0][0])
-
-        serializer = self.serializer_class(comments, many=True)
-
-        return Response({'message': '좋아요한 댓글 목록', 'data': serializer.data, 
+        if len(comments)>0:
+            serializer = self.serializer_class(comments, many=True)
+            return Response({'message': '좋아요한 댓글 목록', 'data': serializer.data, 
                          'speed_avg':voice_speed/len(comment_list), 'pitch_avg': voice_pitch/len(comment_list),
                          'type_avg':Counter(arr).most_common(1)[0][0]}, status=HTTP_200_OK)
+        else:
+            serializer = self.serializer_class(comments, many=True)
+            return Response({'message': '좋아요한 댓글 목록', 'data': serializer.data}, status=HTTP_200_OK)
 
