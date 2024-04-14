@@ -113,7 +113,8 @@ class Mp3Upload(APIView):
             aws_access_key_id=ACCESS_KEY_ID,
             aws_secret_access_key=SECRET_ACCESS_KEY
         )
-        
+        s3_client.put_object(Bucket=AWS_STORAGE_BUCKET_NAME, Key="mp3/"+str(post_pk)+"/") # 오류...해결 -> 일단 무조건 폴더 생성
+
         mp3_list = s3_client.list_objects(Bucket=AWS_STORAGE_BUCKET_NAME, Prefix="mp3/"+str(post_pk)+"/") # s3 버켓 가져와서
         content_list = mp3_list['Contents'] # contents 가져오기! 
         file_list = []
@@ -122,7 +123,7 @@ class Mp3Upload(APIView):
             file_list.append(key)
 
 
-        for i in range(len(file_list), len(comment_list)):
+        for i in range(len(file_list)-1, len(comment_list)): # 폴더명도 포함되므로 -1부터 시작
             client = texttospeech.TextToSpeechClient()
             synthesis_input = texttospeech.SynthesisInput(text=comment_list[i].get('content'))
             voice = texttospeech.VoiceSelectionParams(
@@ -148,7 +149,7 @@ class Mp3Upload(APIView):
             s3_client.put_object(Body=response.audio_content, Bucket=AWS_STORAGE_BUCKET_NAME, Key="mp3/"+str(post_pk)+"/"+str(i)+".mp3")
 
 
-        return Response({"RESULT": comment_list, "반영된 댓글수": len(comment_list)-len(file_list)}, status=200)
+        return Response({"RESULT": comment_list, "반영된 댓글수": len(comment_list)-len(file_list)+1}, status=200)
     
     def put(self, request, post_pk, format=None):
         comments = Comment.objects.filter(post_id=post_pk).order_by('created_at') # 게시글 댓글 가져오고 오래된 순으로
@@ -160,7 +161,7 @@ class Mp3Upload(APIView):
             "type": comment.author_voice.type,
             "content": comment.content
         } for comment in comments]
-        
+        s3_client.put_object(Bucket=AWS_STORAGE_BUCKET_NAME, Key="mp3/"+str(post_pk)+"/") # 오류...해결 -> 일단 무조건 폴더 생성
 
         for i in range(len(comment_list)):
             client = texttospeech.TextToSpeechClient()
@@ -198,6 +199,7 @@ class Mp3Upload(APIView):
             aws_access_key_id=ACCESS_KEY_ID,
             aws_secret_access_key=SECRET_ACCESS_KEY
         )
+        s3_client.put_object(Bucket=AWS_STORAGE_BUCKET_NAME, Key="mp3/"+str(post_pk)+"/") # 오류...해결 -> 일단 무조건 폴더 생성
 
         mp3_list = s3_client.list_objects(Bucket=AWS_STORAGE_BUCKET_NAME, Prefix="mp3/"+str(post_pk)+"/") # s3 버켓 가져와서
         content_list = mp3_list['Contents'] # contents 가져오기! 
@@ -205,7 +207,8 @@ class Mp3Upload(APIView):
         for content in content_list:
             key = content['Key'] # Key값(파일명)만 뽑기
             file_list.append(key)
-        # print(len(file_list)-len(comments))
+        file_list.pop() # file_list는 알파벳순이므로 폴더명은 빼주기
+        # print(file_list)
 
         if len(comments)==0:
             return Response({"RESULT": "댓글을 달아주세요!"}, status=400)

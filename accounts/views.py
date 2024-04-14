@@ -107,8 +107,10 @@ class UserUpdateView(UpdateAPIView):
         serializer = UserSerializer(request.user, data=request.data, partial=True)
         
         if serializer.is_valid():
-            if User.objects.filter(username=request.POST.get('username')).exists() or User.objects.filter(email=request.POST.get('email')).exists():
-                return Response({'message': 'username or email 존재'}, status=status.HTTP_400_BAD_REQUEST)
+            if User.objects.filter(username=request.POST.get('username')).exists():
+                return Response({'message': '동일한 ID가 존재합니다.'}, status=status.HTTP_400_BAD_REQUEST)
+            elif User.objects.filter(email=request.POST.get('email')).exists():
+                return Response({'message': '동일한 email이 존재합니다.'}, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
             return Response({'message': '유저 변경 성공.', 'data': serializer.validated_data}, status=status.HTTP_200_OK)
         return Response({'message': '유저 변경 실패.', 'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -188,6 +190,7 @@ class VoiceInfoView(APIView):
             return Response({'message': 'voice 정보 수정 성공', 'data': serializer.data}, status=HTTP_200_OK)
         return Response({'message': 'voice 정보 수정 실패', 'data': serializer.errors}, status=HTTP_400_BAD_REQUEST)
 
+from collections import Counter
 # 좋아요한 댓글 목록
 class LikedListView(APIView, PaginationHandlerMixin):
     serializer_class = CommentSerializer
@@ -197,6 +200,9 @@ class LikedListView(APIView, PaginationHandlerMixin):
         user = request.user
 
         comments = Comment.objects.filter(like=user.id)
+        voice_speed = 0
+        voice_pitch = 0
+        arr=[] # comment voice type 최빈값 찾기 위한 임시 배열
         comment_list=[]
         for comment in comments:
             comment_list.append({
@@ -206,10 +212,16 @@ class LikedListView(APIView, PaginationHandlerMixin):
             "type": comment.author_voice.type,
             "content": comment.content
             })
+            voice_speed += comment.author_voice.speed
+            voice_pitch += comment.author_voice.pitch
+            arr.append(comment.author_voice.type)
             comment.is_liked=True
-        print(comment_list)
+        print(len(comment_list), comment_list)
+        print(voice_speed, voice_pitch, Counter(arr).most_common(1)[0][0])
 
         serializer = self.serializer_class(comments, many=True)
 
-        return Response({'message': '좋아요한 댓글 목록', 'data': serializer.data}, status=HTTP_200_OK)
+        return Response({'message': '좋아요한 댓글 목록', 'data': serializer.data, 
+                         'speed 평균':voice_speed/len(comment_list), 'pitch 평균': voice_pitch/len(comment_list),
+                         'type 평균':Counter(arr).most_common(1)[0][0]}, status=HTTP_200_OK)
 
