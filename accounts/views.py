@@ -222,6 +222,6 @@ class LikedListView(APIView, PaginationHandlerMixin):
         serializer = self.serializer_class(comments, many=True)
 
         return Response({'message': '좋아요한 댓글 목록', 'data': serializer.data, 
-                         'speed 평균':voice_speed/len(comment_list), 'pitch 평균': voice_pitch/len(comment_list),
-                         'type 평균':Counter(arr).most_common(1)[0][0]}, status=HTTP_200_OK)
+                         'speed_avg':voice_speed/len(comment_list), 'pitch_avg': voice_pitch/len(comment_list),
+                         'type_avg':Counter(arr).most_common(1)[0][0]}, status=HTTP_200_OK)
 
