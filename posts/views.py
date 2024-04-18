@@ -124,7 +124,7 @@ class Mp3Upload(APIView):
         s3_client.put_object(Bucket=AWS_STORAGE_BUCKET_NAME, Key="mp3/"+str(post_pk)+"/") # 오류...해결 -> 일단 무조건 폴더 생성
 
         mp3_list = s3_client.list_objects(Bucket=AWS_STORAGE_BUCKET_NAME, Prefix="mp3/"+str(post_pk)+"/") # s3 버켓 가져와서
-        # 조회에서 시간걸림. redis 등으로 필요한 마지막 댓글 저장
+        # 조회에서 시간걸림. redis or 카프카 등으로 필요한 마지막 댓글 저장(비동기식)
         content_list = mp3_list['Contents'] # contents 가져오기! 
         file_list = []
         for content in content_list:
