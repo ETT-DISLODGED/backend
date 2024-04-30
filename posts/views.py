@@ -300,3 +300,21 @@ class CommentLikeView(APIView):
             return Response({'message': '좋아요 취소 성공', 'data': {'comment': serializer.data['id']}}, status=status.HTTP_200_OK)
         else:
             return Response({'message': '좋아요 취소 실패', 'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# redis practice
+# views.py
+
+from django.http import JsonResponse  
+from django.core.cache import cache
+
+from .models import Post
+
+# #case 1
+# def my_view(request):
+#     posts = Post.objects.all().values('id', 'title')
+#     return JsonResponse(list(posts), safe=False)
+
+def my_view(request):  
+    posts = cache.get_or_set('posts', Post.objects.all().values('id', 'title'))
+    return JsonResponse(list(posts), safe=False)

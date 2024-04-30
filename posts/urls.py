@@ -15,4 +15,6 @@ urlpatterns = [
     path('tts/', TextToSpeechAPIView.as_view(), name='text_to_speech'),
     path('Mp3File/<uuid:post_pk>/',Mp3Upload.as_view(), name="All_TTS_MP3"),
     path('comment/<uuid:pk>/likes/', CommentLikeView.as_view()),
+
+    path('redis/', my_view),
 ]

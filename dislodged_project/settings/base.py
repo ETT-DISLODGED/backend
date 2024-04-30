@@ -193,4 +193,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-#
+# redis
+# Cache
+# CACHES = {  
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         # "LOCATION": ["redis://dislodged-redis.bv3hed.ng.0001.apn2.cache.amazonaws.com:6379/", 
+#         #              "redis://dislodged-redis-ro.bv3hed.ng.0001.apn2.cache.amazonaws.com:6379/"], # redis primary, replica
+#         "LOCATION": "redis://dislodged-redis-ro.bv3hed.ng.0001.apn2.cache.amazonaws.com:6379",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#             # "MASTER_CACHE": "redis://dislodged-redis.bv3hed.ng.0001.apn2.cache.amazonaws.com:6379/",
+#         }
+#     }
+# }
