@@ -31,20 +31,24 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # 이미지 저장을 위한 것
         image_list = [ # (DB에 저장되는 값, 사용자에게 보여지는 값)
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL1.jpg', 1),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL2.jpg', 2),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL3.jpg', 3),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL4.jpg', 4),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL5.jpg', 5),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL6.jpg', 6),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL7.jpg', 7),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL8.jpg', 8),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL9.jpg', 9),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL10.jpg', 10),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL11.jpg', 11)
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+0.png', 1),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+1.png', 2),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+2.png', 3),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+3.png', 4),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+4.png', 5),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+5.png', 6),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+6.png', 7),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+7.png', 8),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+8.png', 9),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+9.png', 10),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+10.png', 11),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+11.png', 12),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+12.png', 13),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+13.png', 14),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+14.png', 15)
 
     ]
-        total_posts = (Post.objects.filter(author=self.request.user).count())%11
+        total_posts = (Post.objects.filter(author=self.request.user).count())%16
         image_url = image_list[total_posts][0]
 
         serializer.save(author = self.request.user, image=image_url)

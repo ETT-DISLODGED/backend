@@ -21,17 +21,21 @@ class Post(models.Model):
         ('기타', '기타')
     ]
     image_list = [ # (DB에 저장되는 값, 사용자에게 보여지는 값)
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL1.jpg', 1),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL2.jpg', 2),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL3.jpg', 3),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL4.jpg', 4),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL5.jpg', 5),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL6.jpg', 6),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL7.jpg', 7),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL8.jpg', 8),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL9.jpg', 9),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL10.jpg', 10),
-        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/DL11.jpg', 11)
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+0.png', 1),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+1.png', 2),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+2.png', 3),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+3.png', 4),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+4.png', 5),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+5.png', 6),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+6.png', 7),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+7.png', 8),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+8.png', 9),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+9.png', 10),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+10.png', 11),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+11.png', 12),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+12.png', 13),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+13.png', 14),
+        ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+14.png', 15)
 
     ]
 
@@ -43,7 +47,7 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    image = models.CharField(max_length=128, choices=image_list, default = 'https://dislodged.s3.ap-northeast-2.amazonaws.com/DL1.jpg') # 이미지 객체 URL
+    image = models.CharField(max_length=128, choices=image_list, default = 'https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+0.png') # 이미지 객체 URL
 
     def __str__(self):
         return f'[{self.id}]{self.title} :: {self.author}'
