@@ -118,7 +118,7 @@ class Mp3Upload(APIView):
         } for comment in comments]
 
         if len(comment_list)==0:
-            return Response({"RESULT": "변환할 댓글이 없습니다."}, status=400)
+            return Response({"RESULT": "변환할 댓글이 없습니다! 해당 게시글로 이동합니다."}, status=400)
         
         s3_client = boto3.client(
             's3',
