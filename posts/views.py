@@ -95,7 +95,7 @@ class CommentViewSet(viewsets.ModelViewSet):
                 return Response({"message":"작성하신 댓글에 비속어나 욕설이 포함되어 있습니다."}, status=status.HTTP_200_OK)
             else:
                 serializer.save(author=self.request.user, author_voice=self.request.user.user_voice)
-            return Response(serializer.data)
+                return Response(serializer.data)
 
 
 
