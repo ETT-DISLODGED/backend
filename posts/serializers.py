@@ -8,6 +8,7 @@ class CommentSerializer(serializers.ModelSerializer):
     voice_speed = serializers.ReadOnlyField(source='author_voice.speed') # 댓글 작성자 voice 정보들 가져오기. voice_info가 바뀌면 이것도 바뀐다.
     voice_pitch = serializers.ReadOnlyField(source='author_voice.pitch')
     voice_type = serializers.ReadOnlyField(source='author_voice.type')
+    content = serializers.CharField()
 
     is_liked = serializers.BooleanField(default=False)
 

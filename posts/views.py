@@ -47,11 +47,14 @@ class PostViewSet(viewsets.ModelViewSet):
         ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+13.png', 14),
         ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+14.png', 15)
 
-    ]
+        ]
         total_posts = (Post.objects.filter(author=self.request.user).count())%16
         image_url = image_list[total_posts][0]
 
         serializer.save(author = self.request.user, image=image_url)
+
+
+from dislodged_project.settings.base import fword_list
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset=Comment.objects.all()
@@ -85,12 +88,14 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(data = request.data, partial=True)
         if serializer.is_valid():
             serializer.is_liked=True
-            serializer.save(author=self.request.user, author_voice=self.request.user.user_voice)
+            if any(str in request.POST.get('content') for str in fword_list):
+                # 리스트 내에 있는 문자들이 content에 포함되어 있는가?
+                # 욕설이 다른 단어와 이어져 있을 때도 판단하기 위해
+                # print(request.POST.get('content'))
+                return Response({"message":"작성하신 댓글에 비속어나 욕설이 포함되어 있습니다."}, status=status.HTTP_200_OK)
+            else:
+                serializer.save(author=self.request.user, author_voice=self.request.user.user_voice)
             return Response(serializer.data)
-
-    # def perform_create(self, serializer):
-    #     serializer.is_liked=True
-    #     serializer.save(author=self.request.user, author_voice=self.request.user.user_voice)
 
 
 

@@ -21,6 +21,8 @@ class User(AbstractUser):
     gender = models.CharField(max_length=2, choices=gender_list, default='여')
     age = models.IntegerField(validators=[MinValueValidator(10), MaxValueValidator(80)])
 
+    # recent_image_number = models.IntegerField(default=0) # 최근에 사용한 이미지 저장을 위한 필드
+
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['password', 'nickname', 'email', 'gender', 'age']
 
