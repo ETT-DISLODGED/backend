@@ -48,8 +48,11 @@ class PostViewSet(viewsets.ModelViewSet):
         ('https://dislodged.s3.ap-northeast-2.amazonaws.com/image/Frame+14.png', 15)
 
         ]
-        total_posts = (Post.objects.filter(author=self.request.user).count())%16
-        image_url = image_list[total_posts][0]
+        num = User.objects.get(id=self.request.user.id)
+        # total_posts = (Post.objects.filter(author=self.request.user).count())%16
+        image_url = image_list[num.recent_image_number%15][0]
+        num.recent_image_number+=1
+        num.save()
 
         serializer.save(author = self.request.user, image=image_url)
 
