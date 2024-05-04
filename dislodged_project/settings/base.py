@@ -194,6 +194,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # filtering 설정
-
 f = open(os.path.join(BASE_DIR, 'fword_list.txt'), "r", encoding='UTF8')
 fword_list = f.read().splitlines()
+
+
+# import os
+# print(os.getcwd())
