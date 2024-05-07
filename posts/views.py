@@ -92,7 +92,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.is_liked=True
             # print(fword_list)
-            content = serializer.validated_data['content']
+            content = serializer.validated_data['content'] # serializer로 받아와야 함! 그냥 받아오면 Nontype
             # print(content, type(content))
             if any(a in content for a in fword_list):
                 # 리스트 내에 있는 문자들이 content에 포함되어 있는가?
