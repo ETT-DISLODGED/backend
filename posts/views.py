@@ -93,8 +93,8 @@ class CommentViewSet(viewsets.ModelViewSet):
             serializer.is_liked=True
             # print("fword_list")
             print(fword_list)
-            content = request.POST.get('content')
-            print(type(content), content)
+            content = serializer.validated_data['content']
+            print(content, type(content))
             if any(a in content for a in fword_list):
                 # 리스트 내에 있는 문자들이 content에 포함되어 있는가?
                 # 욕설이 다른 단어와 이어져 있을 때도 판단하기 위해
